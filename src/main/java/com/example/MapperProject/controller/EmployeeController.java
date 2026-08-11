@@ -2,10 +2,8 @@ package com.example.MapperProject.controller;
 
 
 import com.example.MapperProject.DTO.EmployeeDTO;
-import com.example.MapperProject.Entity.Employee;
 import com.example.MapperProject.Service.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +23,10 @@ public class EmployeeController {
     @PostMapping("/create")
     public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.createEmployee(employeeDTO));
+    }
+    @PostMapping("/createMany")
+    public ResponseEntity<List<EmployeeDTO>> createManyEmployees(@RequestBody List<EmployeeDTO> employeeDTOList) {
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.createManyEmployees(employeeDTOList));
     }
     @GetMapping("{id}")
     public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long id) {

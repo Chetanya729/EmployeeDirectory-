@@ -21,7 +21,9 @@ public interface EmployeeMapper {
         @Mapping(source = "department", target = "department")
         Employee toEntity(EmployeeDTO employeeDTO);
 
+        List<Employee> toEntityList(List<EmployeeDTO> employeeDTOS);
         List<EmployeeDTO> toDTOList(List<Employee> employees);
+
 
         default String mapDepartmenttoString(Department department){
              return department != null ? department.name() : null;
