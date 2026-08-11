@@ -32,4 +32,23 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getById(id));
     }
+
+    // ---- ModelMapper -----
+
+    @GetMapping("/mm")
+    public ResponseEntity<List<EmployeeDTO>> getAllMM() {
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.getAllEmployeesMM());
+    }
+    @PostMapping("/mm/create")
+    public ResponseEntity<EmployeeDTO> createEmployeeMM(@RequestBody EmployeeDTO employeeDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.createEmployeeMM(employeeDTO));
+    }
+    @PostMapping("/mm/createMany")
+    public ResponseEntity<List<EmployeeDTO>> createManyEmployeesMM(@RequestBody List<EmployeeDTO> employeeDTOList) {
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.createManyEmployeesMM(employeeDTOList));
+    }
+    @GetMapping("/mm/{id}")
+    public ResponseEntity<EmployeeDTO> getEmployeeMM(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.getByIdMM(id));
+    }
 }
