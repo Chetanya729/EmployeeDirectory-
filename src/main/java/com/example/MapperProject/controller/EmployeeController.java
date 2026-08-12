@@ -2,8 +2,10 @@ package com.example.MapperProject.controller;
 
 
 import com.example.MapperProject.DTO.EmployeeDTO;
+import com.example.MapperProject.Entity.Employee;
 import com.example.MapperProject.Service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +34,10 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getById(id));
     }
-
-    // ---- ModelMapper -----
+    @GetMapping("/name")
+    public ResponseEntity<List<Employee>>findAllbyName() {
+        return ResponseEntity.ok().body(employeeService.findEmployees("HR"));
+    }
 
     @GetMapping("/mm")
     public ResponseEntity<List<EmployeeDTO>> getAllMM() {
@@ -50,5 +54,9 @@ public class EmployeeController {
     @GetMapping("/mm/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeeMM(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getByIdMM(id));
+    }
+    @PostMapping("/page")
+    public ResponseEntity<Page<Employee>> getEmployeePage(@RequestBody Employee employee, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value ="size",defaultValue = "10") int size) {
+        return ResponseEntity.ok().body(employeeService.EmployeePage(employee, page, size));
     }
 }
