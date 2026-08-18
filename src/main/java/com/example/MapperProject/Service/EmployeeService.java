@@ -12,6 +12,9 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +44,7 @@ public class EmployeeService {
         return em.createQuery(cq).getResultList();
     }
 
+    @CacheEvict(value = "employees.mapstruct", key = "#result.id")
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO){
         long start = System.nanoTime();
         Employee employee = mapper.toEntity(employeeDTO);
@@ -62,6 +66,7 @@ public class EmployeeService {
         return dto;
     }
 
+    @CacheEvict(value = {"employees.mapstruct", "employees.mm"}, allEntries = true)
     public List<EmployeeDTO> createManyEmployees(List<EmployeeDTO> employeeDTOSList){
         long start = System.nanoTime();
         List<EmployeeDTO> saved = new ArrayList<>();
@@ -79,7 +84,7 @@ public class EmployeeService {
         }
         return saved;
     }
-
+    @Cacheable(value = "employees.mapstruct", key = "#id")
     public EmployeeDTO getById(Long id) {
         return employeeRepository.findById(id)
                 .map(mapper::toDTO)
@@ -87,6 +92,7 @@ public class EmployeeService {
                         "Employee not found with id " + id));
     }
 
+    @CacheEvict(value = "employees.mm", key = "#result.id")
     public EmployeeDTO createEmployeeMM(EmployeeDTO employeeDTO){
         long start = System.nanoTime();
         Employee employee = mmMapper.toEntity(employeeDTO);
@@ -103,6 +109,7 @@ public class EmployeeService {
         return mmMapper.toDTOList(employees);
     }
 
+    @CacheEvict(value = {"employees.mapstruct", "employees.mm"}, allEntries = true)
     public List<EmployeeDTO> createManyEmployeesMM(List<EmployeeDTO> employeeDTOSList){
         long start = System.nanoTime();
         List<EmployeeDTO> saved = new ArrayList<>();
@@ -120,7 +127,7 @@ public class EmployeeService {
         }
         return saved;
     }
-
+    @Cacheable(value = "employees.mm", key = "#id")
     public EmployeeDTO getByIdMM(Long id) {
         return employeeRepository.findById(id)
                 .map(mmMapper::toDTO)
